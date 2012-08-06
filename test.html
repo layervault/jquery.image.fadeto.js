@@ -7,14 +7,25 @@
 <body>
 
   <div>
-    <img src="http://i.imgur.com/T9ZoL.gif">
+    <img id="Demo" data-images='{ "targets" : ["https://img.skitch.com/20111026-r2wsngtu4jftwxmsytdke6arwd.png", "http://img.skitch.com/20100714-d6q52xajfh4cimxr3888yb77ru.jpg", "http://25.media.tumblr.com/tumblr_m5wvyny9aK1rz4ewoo1_500.png", "http://i.imgur.com/6GKBf.gif", "http://i.imgur.com/T9ZoL.gif", "http://i100.photobucket.com/albums/m17/wayman_lee/mind_blown.gif"] }' src="http://i.imgur.com/T9ZoL.gif">
   </div>
 
   <script>
   // http://i100.photobucket.com/albums/m17/wayman_lee/mind_blown.gif
-    // $(function () {
-      // $('h1').fadeTo("Goodbye, World!");
-    // });
+    $(function () {
+      var
+        $demo = $('#Demo'),
+        strings = JSON.parse($demo.attr('data-images')).targets,
+        randomString;
+
+      randomString = function () {
+        return strings[Math.floor(Math.random() * strings.length)];
+      };
+
+      setInterval(function () {
+        $('#Demo').fadeToSrc(randomString());
+      }, 5000);
+    });
   </script>
 </body>
 </html>

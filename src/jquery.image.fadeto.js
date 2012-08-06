@@ -168,8 +168,12 @@
         // Hijack all of the classes from the original image to ensure proper positioning.
         if (options.hijackClasses) {
           $.each($e.get(0).classList, function (index, item) {
-            $newImage.addClass(item);
+            if (item.indexOf("LV-") === -1) {
+              $newImage.addClass(item);
+            }
           });
+
+          $newImage.attr('id', $e.attr('id'));
         }
 
         // Clean up after ourselves
