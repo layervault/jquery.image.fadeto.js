@@ -3,13 +3,13 @@
 Fade an image from one `src` to another, all with one line of JavaScript.
 
 ```javascript
-$('img').fadeTo("http://images.com/new_image.png");
+$('img').fadeToSrc("http://images.com/new_image.png");
 ```
 
 You can also give it a few options:
 
 ```javascript
-$('img').fadeTo("http://images.com/new_image.png", {
+$('img').fadeToSrc("http://images.com/new_image.png", {
   fadeInLength: 1000,
   fadeOutLength: 2000,
   fadeInEasing: 'ease-in',
@@ -20,7 +20,7 @@ $('img').fadeTo("http://images.com/new_image.png", {
 Or even a callback:
 
 ```javascript
-$('img').fadeTo("http://images.com/new_image.png", function () {
+$('img').fadeToSrc("http://images.com/new_image.png", function () {
   alert("We're done!");
 });
 

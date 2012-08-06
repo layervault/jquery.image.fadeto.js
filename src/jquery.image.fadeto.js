@@ -119,13 +119,12 @@
 
   //-- Methods to attach to jQuery sets
 
-  $.fn.fadeTo = function(newSource, opts, callback) {
+  $.fn.fadeToSrc = function(newSource, opts, callback) {
     var
       $e = $(this),
       classes,
       transitionClasses,
       $transitionImage = $('<img />'),
-      oldClasses = [],
       $newImage = $('<img />'),
       $imageParent;
 
@@ -154,6 +153,7 @@
 
     newImage = new Image();
 
+    // Start things up once the image is loaded so we don't experience flashes of background.
     newImage.onload = function () {
       $transitionImage.attr('src', newSource);
       $newImage.attr('src', newSource);
@@ -165,12 +165,14 @@
       window.setTimeout(function () {
         $imageParent = $e.parent();
 
+        // Hijack all of the classes from the original image to ensure proper positioning.
         if (options.hijackClasses) {
           $.each($e.get(0).classList, function (index, item) {
             $newImage.addClass(item);
           });
         }
 
+        // Clean up after ourselves
         $e.remove();
         $imageParent.append($newImage);
         classes.$style.remove();
@@ -181,9 +183,12 @@
           options.callback();
         }
       }, options.fadeLength);
+
+      // Detach
       newImage.onload = null;
     };
 
+    // Get things started.
     newImage.src = newSource;
   };
 })(jQuery);
