@@ -1,7 +1,7 @@
 /*
- * jquery.text.fadeto.js
+ * jquery.image.fadeto.js
  *
- * Fade to a text string of your choice, all using CSS3 animations.
+ * Fade an <img> to a new source, all using CSS3 animations.
  */
 (function($) {
   var
@@ -65,10 +65,11 @@
 
   //-- Methods to attach to jQuery sets
 
-  $.fn.fadeTo = function(newText, opts, callback) {
+  $.fn.fadeTo = function(newSource, opts, callback) {
     var
       $e = $(this),
-      classes;
+      classes,
+      newImage;
 
     if (typeof opts === "function") {
       opts = {
@@ -79,26 +80,33 @@
       opts.callback = callback
     }
 
-    // No use fading nothing to nothing.
-    if ($.trim($e.text()) === "" && $.trim(newText) === "") {
+    // We're not dealing with an image tag. Bail out.
+    if ($e.attr('tagName').toLowerCase() !== "img") {
       return;
     }
 
     classes = setup(opts);
-    $e.addClass(classes.fadeOut);
-    window.setTimeout(function () {
 
-      $e.text(newText);
-      $e.addClass(classes.fadeIn);
-      $e.removeClass(classes.fadeOut);
+    newImage = new Image();
+
+    newImage.onload = function () {
+      $e.addClass(classes.fadeOut);
       window.setTimeout(function () {
-        $e.removeClass(classes.fadeIn);
-        classes.$style.remove();
+        $e.attr('src', newSource);
+        $e.addClass(classes.fadeIn);
+        $e.removeClass(classes.fadeOut);
+        window.setTimeout(function () {
+          $e.removeClass(classes.fadeIn);
+          classes.$style.remove();
 
-        if (typeof options.callback === "function") {
-          options.callback();
-        }
-      }, options.fadeInLength);
-    }, options.fadeOutLength);
+          if (typeof options.callback === "function") {
+            options.callback();
+          }
+        }, options.fadeInLength);
+      }, options.fadeOutLength);
+      newImage.onload = null;
+    };
+
+    newImage.src = newSource;
   };
 })(jQuery);
