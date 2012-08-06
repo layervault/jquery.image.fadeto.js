@@ -54,7 +54,7 @@
 
     $style.html(
       "." + fadeInClass       + " { visibility: visible; opacity: 1; " + fadeInTransition  + " } " +
-      "." + fadeOutClass      + " { visibility: hidden;  opacity: 0; " + fadeOutTransition + " }" +
+      "." + fadeOutClass      + " { visibility: hidden;  opacity: 0; " + fadeOutTransition + " } " +
       "." + zeroOpacityClass  + " { visibility: visible; opacity: 0; }"
     );
 
@@ -89,12 +89,14 @@
       zIndex = 1;
     }
 
-    top = $oldImage.position().top;
-    left = $oldImage.position().left;
+    top = $oldImage.offset().top;
+    left = $oldImage.offset().left;
+    containerTop = $oldImage.position().top;
+    containerLeft = $oldImage.position().left
 
     $style.html(
-      "." + transitionImagePositionClass + " { position: absolute; top: " + top + "px; left: " + left + "px; z-index: " + zIndex +"; }" +
-      "." + oldImagePositionClass + "{ position: absolute; top: " + top + "px; left: " + left + "px; z-index: " + (zIndex + 1) + "; }"
+      "." + transitionImagePositionClass + " { position: absolute; top: " + top + "px; left: " + left + "px; z-index: " + zIndex +"; } " +
+      "." + oldImagePositionClass + "{ position: absolute; top: " + containerTop + "px; left: " + containerLeft + "px; z-index: " + (zIndex + 1) + "; }"
     );
 
     $head.append($style);
@@ -107,10 +109,18 @@
   };
 
   positionNewImage = function ($newImage, $oldImage) {
-    var classes = positionClassesFrom($oldImage)
+    var
+      classes = positionClassesFrom($oldImage),
+      oldImage = $oldImage.get(0);
 
     $newImage.data('positionClass', classes.transitionImage);
     $newImage.addClass($newImage.data('positionClass'));
+
+    $.each(oldImage.style, function (i, o) {
+      $newImage.css(o, oldImage.style[o]);
+    });
+
+    $newImage.css('opacity', 1);
 
     $oldImage.addClass(classes.oldImage);
 
@@ -126,7 +136,8 @@
       transitionClasses,
       $transitionImage = $('<img />'),
       $newImage = $('<img />'),
-      $imageParent;
+      $imageParent,
+      oldImage = $e.get(0);
 
     if (typeof opts === "function") {
       opts = {
@@ -148,6 +159,11 @@
 
     classes = setup(opts);
     transitionClasses = positionNewImage($transitionImage, $e);
+
+    $.each(oldImage.style, function (i, o) {
+      $newImage.css(o, oldImage.style[o]);
+    });
+    $newImage.css('opacity', 1);
 
     $('body').append($transitionImage);
 
