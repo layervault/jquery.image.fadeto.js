@@ -92,11 +92,13 @@
     top = $oldImage.offset().top;
     left = $oldImage.offset().left;
     containerTop = $oldImage.position().top;
-    containerLeft = $oldImage.position().left
+    containerLeft = $oldImage.position().left;
+    oldHeight = $oldImage.height();
+    oldWidth = $oldImage.width();
 
     $style.html(
       "." + transitionImagePositionClass + " { position: absolute; top: " + top + "px; left: " + left + "px; z-index: " + zIndex +"; } " +
-      "." + oldImagePositionClass + "{ position: absolute; top: " + containerTop + "px; left: " + containerLeft + "px; z-index: " + (zIndex + 1) + "; }"
+      "." + oldImagePositionClass + "{ position: absolute; top: " + containerTop + "px; left: " + containerLeft + "px; z-index: " + (zIndex + 1) + "; height: " + oldHeight + "px; width: " + oldWidth + "px; }"
     );
 
     $head.append($style);
@@ -108,19 +110,21 @@
     }
   };
 
-  positionNewImage = function ($newImage, $oldImage) {
+  positionNewImage = function ($transitionImage, $oldImage) {
     var
       classes = positionClassesFrom($oldImage),
       oldImage = $oldImage.get(0);
 
-    $newImage.data('positionClass', classes.transitionImage);
-    $newImage.addClass($newImage.data('positionClass'));
+    $transitionImage.data('positionClass', classes.transitionImage);
+    $transitionImage.addClass($transitionImage.data('positionClass'));
 
     $.each(oldImage.style, function (i, o) {
-      $newImage.css(o, oldImage.style[o]);
+      $transitionImage.css(o, oldImage.style[o]);
     });
 
-    $newImage.css('opacity', 1);
+    $transitionImage.css('opacity', 1);
+    $transitionImage.height($oldImage.height());
+    $transitionImage.width($oldImage.width());
 
     $oldImage.addClass(classes.oldImage);
 
@@ -175,6 +179,7 @@
       $newImage.attr('src', newSource);
 
       $e.addClass(classes.fadeOut);
+      $e.css('opacity', '');
 
       // Once the fades are done, remove the original image and shuffle new image into the correct
       // place on the DOM.
