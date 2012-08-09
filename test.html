@@ -1,31 +1,440 @@
+
 <!doctype html>
+<!--
+
+oooooooooo.                                            oooo
+`888'   `Y8b                                           `888
+ 888     888  .ooooo.   .ooooo.  oooo    ooo  .oooo.    888 .oo.
+ 888oooo888' d88' `88b d88' `88b  `88.  .8'  `P  )88b   888P"Y88b
+ 888    `88b 888   888 888   888   `88..8'    .oP"888   888   888
+ 888    .88P 888   888 888   888    `888'    d8(  888   888   888
+o888bood8P'  `Y8bod8P' `Y8bod8P'     .8'     `Y888""8o o888o o888o
+                                 .o..P'
+                                 `Y8P'
+-->
 <html>
 <head>
-</head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="/src/jquery.image.fadeto.js"></script>
-<body>
+  <meta charset="utf-8">
+  <title>fadeToSrc from LayerVault</title>
+  <meta name="Keywords" content="layervault, opensource, github, javascript, ruby" />
+  <meta name="Description" content="Fade between images using CSS3" />
+  <meta name="og:type"  content="website" />
+  <meta name="og:image" content="https://d1f7cstdggpuix.cloudfront.net/images/external-logo-hp.png" />
+  <meta name="og:url"   content="http://projects.layervault.com/" />
+  <link rel="icon" type="image/png" href="https://d1f7cstdggpuix.cloudfront.net/images/favicon.png" />
 
-  <div>
-    <img id="Demo" data-images='{ "targets" : ["https://img.skitch.com/20111026-r2wsngtu4jftwxmsytdke6arwd.png", "http://img.skitch.com/20100714-d6q52xajfh4cimxr3888yb77ru.jpg", "http://25.media.tumblr.com/tumblr_m5wvyny9aK1rz4ewoo1_500.png", "http://i.imgur.com/6GKBf.gif", "http://i.imgur.com/T9ZoL.gif", "http://i100.photobucket.com/albums/m17/wayman_lee/mind_blown.gif"] }' src="http://i.imgur.com/T9ZoL.gif">
-  </div>
+<style>
+/* line 3, ../sass/cosmos.scss */
+body {
+  margin: 0;
+  background: #0f1419;
+  font: 12px/20px "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  color: #9099a3;
+  -webkit-font-smoothing: antialiased;
+}
 
-  <script>
-  // http://i100.photobucket.com/albums/m17/wayman_lee/mind_blown.gif
-    $(function () {
-      var
-        $demo = $('#Demo'),
-        strings = JSON.parse($demo.attr('data-images')).targets,
-        randomString;
+/* line 11, ../sass/cosmos.scss */
+a {
+  text-decoration: none;
+  color: #9099a3;
+}
 
-      randomString = function () {
-        return strings[Math.floor(Math.random() * strings.length)];
-      };
+/* line 16, ../sass/cosmos.scss */
+.Highlight {
+  color: #eceef1;
+}
 
-      setInterval(function () {
-        $('#Demo').fadeToSrc(randomString());
-      }, 5000);
-    });
+/* line 20, ../sass/cosmos.scss */
+.SpiralPoint {
+  position: absolute;
+}
+
+/* line 24, ../sass/cosmos.scss */
+#SpiralCanvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+/* line 32, ../sass/cosmos.scss */
+.Clear {
+  clear: both;
+}
+
+/* line 36, ../sass/cosmos.scss */
+#Content {
+  width: 540px;
+  z-index: 2;
+}
+
+/* line 45, ../sass/cosmos.scss */
+#Header a {
+  position: relative;
+  float: left;
+  left: 250px;
+  width: 41px;
+  height: 50px;
+  background: url("/images/home-logo.png") no-repeat;
+}
+
+/* line 54, ../sass/cosmos.scss */
+#Lede {
+  margin: 115px 0 125px;
+  font-size: 42px;
+  line-height: 48px;
+  font-weight: 200;
+}
+
+/* line 61, ../sass/cosmos.scss */
+#Lede .Highlight {
+  font-weight: bold;
+}
+
+/* line 65, ../sass/cosmos.scss */
+#Content {
+  position: relative;
+  top: 85px;
+  height: 100%;
+  margin: auto;
+  margin-bottom: 100px;
+  font-size: 18px;
+  line-height: 26px;
+  overflow: auto;
+}
+
+/* line 76, ../sass/cosmos.scss */
+h2 {
+  margin: 0 0 30px 0;
+  font-size: 26px;
+  line-height: 30px;
+}
+
+/* line 82, ../sass/cosmos.scss */
+#Content a {
+  text-decoration: none;
+}
+
+/* line 86, ../sass/cosmos.scss */
+.Project {
+  margin-bottom: 20px;
+}
+
+/* line 90, ../sass/cosmos.scss */
+.ProjectLogo {
+  float: left;
+  padding: 4px 10px;
+  margin-right: 20px;
+}
+
+/* line 96, ../sass/cosmos.scss */
+#Typer .ProjectLogo {
+  background: #dd4a38;
+  color: #eceef1;
+  font-weight: bold;
+  font-size: 24px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+/* line 104, ../sass/cosmos.scss */
+#Filter .ProjectLogo {
+  background: #26ae90;
+  color: #eceef1;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 4px 8px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* line 113, ../sass/cosmos.scss */
+#Haircut .ProjectLogo {
+  background: #55606F;
+  position: relative;
+  top: -2px;
+  padding: 6px 8px 4px 8px;
+  color: #eceef1;
+  font-weight: bold;
+  font-size: 24px;
+  -webkit-border-radius: 50px 50px 10px 10px;
+  -moz-border-radius: 50px 50px 10px 10px;
+  border-radius: 50px 50px 10px 10px;
+}
+
+/* line 124, ../sass/cosmos.scss */
+#FadeTo .ProjectLogo {
+  background: #e47600;
+  color: #eceef1;
+  font-weight: bold;
+  font-size: 24px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 132, ../sass/cosmos.scss */
+#FadeToSrc .ProjectLogo {
+  background: #0f1419;
+  color: #8F98A2;
+  padding: 2px 8px;
+  font-weight: bold;
+  font-size: 24px;
+  border: 2px solid #8F98A2;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 142, ../sass/cosmos.scss */
+.ProjectDescription {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* line 147, ../sass/cosmos.scss */
+#Typer .ProjectDescription,
+#Filter .ProjectDescription {
+  height: 34px;
+}
+/* line 3, ../sass/project.scss */
+#ProjectLogo {
+  float: left;
+  position: relative;
+  top: 8px;
+  margin: 0 15px 0 0;
+  width: 35px;
+  height: 35px;
+  font: bold 24px/35px "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  text-align: center;
+}
+
+/* line 14, ../sass/project.scss */
+h2 {
+  margin-top: 80px;
+}
+
+/* line 18, ../sass/project.scss */
+h3 {
+  font: bold 18px/26px "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  margin: 35px 0 15px 0;
+  padding: 0;
+}
+
+/* line 24, ../sass/project.scss */
+p code {
+  color: inherit;
+  display: inline;
+  font-size: 16px;
+}
+
+/* line 30, ../sass/project.scss */
+pre {
+  font-size: 13px;
+  line-height: 20px;
+  padding: 15px 20px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  overflow: auto;
+  margin: 20px 0;
+}
+
+/* line 44, ../sass/project.scss */
+.BigButton,
+.BigHollowButton {
+  float: left;
+  margin: 0 20px 0 0;
+  width: 180px;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 20px 0;
+  text-align: center;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+/* line 56, ../sass/project.scss */
+.BigHollowButton {
+  width: 136px;
+  padding: 18px 0;
+  margin: 0;
+}
+
+/* line 63, ../sass/project.scss */
+.BigButton:active,
+.BigHollowButton:active {
+  padding: 22px 0 18px;
+  -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) inset;
+  -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) inset;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) inset;
+}
+
+/* line 70, ../sass/project.scss */
+.BigHollowButton:active {
+  padding: 20px 0 16px;
+}
+
+/* line 74, ../sass/project.scss */
+#License {
+  margin-bottom: 100px;
+  font-size: 14px;
+  line-height: 22px;
+}
+/* line 3, ../sass/fade-to-src.scss */
+body {
+  background: #ECEEF1;
+  color: #9099A3;
+}
+
+/* line 8, ../sass/fade-to-src.scss */
+a {
+  color: #9099A3;
+}
+
+/* line 12, ../sass/fade-to-src.scss */
+#Header a {
+  background: url("/images/srcfade-logo.png") no-repeat;
+}
+
+/* line 18, ../sass/fade-to-src.scss */
+h3,
+h2,
+.Highlight {
+  color: #27313D;
+}
+
+/* line 23, ../sass/fade-to-src.scss */
+#ProjectLogo {
+  width: 31px;
+  height: 31px;
+  color: #27313D;
+  background: #ECEEF1;
+  border: 2px solid #27313D;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 32, ../sass/fade-to-src.scss */
+pre {
+  background: #9099A3;
+  color: #FFF;
+}
+
+/* line 37, ../sass/fade-to-src.scss */
+.BigButton {
+  background: #9099A3;
+  color: #ECEEF1;
+}
+
+/* line 42, ../sass/fade-to-src.scss */
+.BigButton:active {
+  background: #767f8a;
+  color: #ECEEF1;
+}
+
+/* line 47, ../sass/fade-to-src.scss */
+.BigHollowButton {
+  border: 2px solid #27313D;
+}
+</style>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+    <script src="src/jquery.image.fadeto.js"></script>
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24426626-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
   </script>
+</head>
+<body>
+  <div id="Content">
+  <div id="Header">
+  <a href="/"></a>
+</div>
+
+  <div class="Clear"></div>
+
+  <h1 id="Lede"><span id="ProjectLogo">F</span><span class="Highlight">fadeToSrc</span> fades between images using CSS3.</h1>
+
+  <h2>Get it</h2>
+
+<a class="BigButton" href="https://github.com/layervault/jquery.image.fadeto.js/zipball/master">Download .zip</a>
+<a class="BigButton" href="https://github.com/layervault/jquery.image.fadeto.js/tarball/master">Download .tar.gz</a>
+<a class="BigHollowButton" href="https://github.com/layervault/jquery.image.fadeto.js">View on GitHub</a>
+
+  <div class="Clear"></div>
+
+  <h2>Usage</h2>
+
+  <p>Fade an image to another image using CSS3 transitions, but invoked via JavaScript.</p>
+
+  <pre><code>$('img').fadeToSrc("http://layervault.com/new_source.png");</pre></code>
+
+  <p>You can also give it a few options:</p>
+
+  <pre><code>$('img').fadeToSrc("New Subheading", {
+  fadeInLength: 1000,
+  fadeOutLength: 2000,
+  fadeInEasing: 'ease-in',
+  fadeOutEasing: 'ease-out'
+});</code></pre>
+
+  <p>Or event a callback:</p>
+
+  <pre><code>$('img').fadeToSrc("New Subheading", function () {
+  alert("Fade complete!");
+});</code></pre>
+
+  <h2>Installation</h2>
+
+  <p>Just include <code>jquery.image.fadeto.js</code> as a script tag on the page. Bonus points for incorporating it into your asset pipeline.</p>
+
+  <div class="Clear"></div>
+
+  <h2>Demo</h2>
+  <img id="Demo" data-srcs='{ "targets": [ "/images/demo-img1.png", "/images/demo-img2.png", "/images/demo-img3.png"] }' src="/images/demo-img1.png" />
+  <div class="Clear"></div>
+
+  <div id="License">
+  <h2>License</h2>
+  <p>Copyright 2012 LayerVault Inc.</p>
+
+  <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+  <p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
+</div>
+</div>
+<script>
+$(function () {
+  var
+    $demo = $('#Demo'),
+    sources = JSON.parse($demo.attr('data-srcs')).targets,
+    randomSrc;
+
+  randomSrc = function () {
+    return sources[Math.floor(Math.random() * sources.length)];
+  };
+
+  setInterval(function () {
+    $('#Demo').fadeToSrc(randomSrc());
+  }, 5000);
+});
+</script>
 </body>
 </html>

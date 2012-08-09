@@ -11,7 +11,8 @@
     prefixes,
     randomClass,
     positionNewImage,
-    positionClassesFrom;
+    positionClassesFrom,
+    createStrut;
 
   options = {
     fadeLength      : 1000,
@@ -66,6 +67,15 @@
       fadeOut     : fadeOutClass,
       zeroOpacity : zeroOpacityClass
     };
+  };
+
+  createStrut = function ($oldImage) {
+    var $strut = $('<div style="overflow: hidden;"></div>');
+
+    $strut.height($oldImage.height());
+    $strut.width($oldImage.width());
+
+    return $strut;
   };
 
   /*
@@ -141,7 +151,8 @@
       $transitionImage = $('<img />'),
       $newImage = $('<img />'),
       $imageParent,
-      oldImage = $e.get(0);
+      oldImage = $e.get(0),
+      $strut;
 
     if (typeof opts === "function") {
       opts = {
@@ -175,6 +186,9 @@
 
     // Start things up once the image is loaded so we don't experience flashes of background.
     newImage.onload = function () {
+      // If the image is controlling the flow of the page, we need to put a strut in its place while we transition that.
+      $strut = createStrut($e);
+      $e.after($strut);
       $transitionImage.attr('src', newSource);
       $newImage.attr('src', newSource);
 
@@ -199,7 +213,8 @@
 
         // Clean up after ourselves
         $e.remove();
-        $imageParent.append($newImage);
+        $strut.after($newImage);
+        $strut.remove();
         classes.$style.remove();
         transitionClasses.$style.remove();
         $transitionImage.remove();
