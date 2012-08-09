@@ -1,4 +1,3 @@
-
 <!doctype html>
 <!--
 
@@ -409,7 +408,14 @@ pre {
   <div class="Clear"></div>
 
   <h2>Demo</h2>
-  <img id="Demo" data-srcs='{ "targets": [ "/images/demo-img1.png", "/images/demo-img2.png", "/images/demo-img3.png"] }' src="/images/demo-img1.png" />
+  <style>
+  #DemoWrapper {
+    height: 304px;
+  }
+  </style>
+  <div id="DemoWrapper">
+    <img id="Demo" data-srcs='{ "targets": [ "/images/demo-img1.png", "/images/demo-img2.png", "/images/demo-img3.png"] }' src="/images/demo-img1.png" />
+  </div>
   <div class="Clear"></div>
 
   <div id="License">
